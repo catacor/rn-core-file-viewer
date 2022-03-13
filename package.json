@@ -1,0 +1,85 @@
+{
+  "name": "rn-core-file-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/catacor/rn-core-file-viewer#readme",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "author": "Catalin Cor <catalin.cornescu@yahoo.com>",
+  "license": "MIT",
+  "files": [
+    "android",
+    "ios",
+    "lib",
+    "rn-core-file-viewer.podspec",
+    "!android/build",
+    "!.DS_Store",
+    "!.gradle",
+    "!.idea",
+    "!build",
+    "!gradle",
+    "!*.iml",
+    "!gradlew",
+    "!gradlew.bat",
+    "!local.properties",
+    "!project.xcworkspace",
+    "!xcshareddata",
+    "!xcuserdata"
+  ],
+  "scripts": {
+    "compile": "rm -rf lib && tsc -p .",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "prepare": "yarn compile",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/runtime": "^7.16.7",
+    "@react-native-community/eslint-config": "^3.0.1",
+    "@types/jest": "^27.4.0",
+    "@types/react-native": "^0.66.15",
+    "@types/react-test-renderer": "^17.0.1",
+    "babel-jest": "^27.4.6",
+    "base64-arraybuffer": "^1.0.2",
+    "eslint": "^7.32.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "expo-gl": "^11.1.2",
+    "expo-gl-cpp": "^11.1.1",
+    "expo-three": "^6.1.0",
+    "expo-three-orbit-controls": "^2.0.0",
+    "jest": "^27.4.7",
+    "lottie-ios": "*",
+    "lottie-react-native": "*",
+    "metro-react-native-babel-preset": "^0.67.0",
+    "react": "^17.0.2",
+    "react-native": "^0.67.1",
+    "react-native-gesture-handler": "^2.3.0",
+    "react-native-reanimated": "^2.4.1",
+    "react-native-redash": "^16.2.3",
+    "react-test-renderer": "^17.0.2",
+    "rn-fetch-blob": "^0.12.0",
+    "three": "^0.138.3",
+    "typescript": "^4.5.5"
+  },
+  "peerDependencies": {
+    "lottie-ios": "^3.2.3",
+    "lottie-react-native": "^5.0.1",
+    "react": "*",
+    "react-native": "*",
+    "rn-fetch-blob": "^0.12.0"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "dependencies": {
+    "expo": "^44.0.6"
+  }
+}
