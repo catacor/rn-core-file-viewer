@@ -1,7 +1,7 @@
 {
   "name": "rn-core-file-viewer",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.2",
+  "description": "File Viewer (images and 3D objects)",
   "homepage": "https://github.com/catacor/rn-core-file-viewer#readme",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -46,7 +46,6 @@
     "expo-gl": "^11.1.2",
     "expo-gl-cpp": "^11.1.1",
     "expo-three": "^6.1.0",
-    "expo-three-orbit-controls": "^2.0.0",
     "jest": "^27.4.7",
     "lottie-ios": "*",
     "lottie-react-native": "*",
@@ -62,11 +61,8 @@
     "typescript": "^4.5.5"
   },
   "peerDependencies": {
-    "lottie-ios": "^3.2.3",
-    "lottie-react-native": "^5.0.1",
     "react": "*",
-    "react-native": "*",
-    "rn-fetch-blob": "^0.12.0"
+    "react-native": "*"
   },
   "jest": {
     "preset": "react-native",
@@ -80,6 +76,14 @@
     ]
   },
   "dependencies": {
-    "expo": "^44.0.6"
+    "expo": "^44.0.6",
+    "expo-gl": "^11.1.2",
+    "expo-gl-cpp": "^11.1.1",
+    "expo-three": "^6.1.0",
+    "lottie-ios": "^3.2.3",
+    "lottie-react-native": "^5.0.1",
+    "react-native-gesture-handler": "^2.3.0",
+    "react-native-reanimated": "^2.4.1",
+    "rn-fetch-blob": "^0.12.0"
   }
 }
