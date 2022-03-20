@@ -12,6 +12,7 @@ import {
   Animated,
   PermissionsAndroid,
   Platform,
+  ActivityIndicator,
 } from 'react-native'
 import LottieView from 'lottie-react-native'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -24,6 +25,7 @@ const TOGGLE_VISIBILITY = 'TOGGLE_VISIBILITY'
 const FILE_URL_SOURCE_CHANGE = 'FILE_URL_SOURCE_CHANGE'
 const DOWNLOAD_PROGGRESS_CHANGED = 'DOWNLOAD_PROGGRESS_CHANGED'
 const DOWNLOAD_FINISHED = 'DOWNLOAD_FINISHED'
+const DOWNLOAD_ERROR = 'DOWNLOAD_ERROR'
 const CHANGE_CACHING_CONF = 'CHANGE_CACHING_CONF'
 const FILE_CACHE_STATE = 'FILE_CACHE_STATE'
 const FILE_REDY_STATUS = 'FILE_REDY_STATUS'
@@ -66,6 +68,15 @@ const reducer = (state, action) => {
         filePath: action.path,
       }
     }
+    case DOWNLOAD_ERROR: {
+      return {
+        ...state,
+        downloadProgres: 0.0,
+        isFileReady: true,
+        isFileCached: false,
+        filePath: '',
+      }
+    }
     case CHANGE_CACHING_CONF: {
       return {
         ...state,
@@ -104,6 +115,9 @@ const changeFileExtension = (ext) => ({
 const fileDownloadReady = (path) => ({
   type: DOWNLOAD_FINISHED,
   path: path,
+})
+const fileDownloadError = () => ({
+  type: DOWNLOAD_ERROR,
 })
 const changeCachingConfig = (conf) => ({
   type: CHANGE_CACHING_CONF,
@@ -246,7 +260,9 @@ export const CoreFileViewer = (props) => {
             )
           )
         } else {
-          // handle other status codes
+          console.log('Error! File path is worng')
+          console.log(res.info())
+          dispatch(fileDownloadError())
         }
       })
       // Something went wrong:
@@ -258,50 +274,70 @@ export const CoreFileViewer = (props) => {
   }
 
   const renderAppropriateViewer = () => {
-    let fileName = state.filePath
-    let parts = fileName.split('.')
-    let extension = ''
-    if (parts.length > 0) {
-      extension = parts[parts.length - 1]
-    }
+    if (state.filePath) {
+      let fileName = state.filePath
+      let parts = fileName.split('.')
+      let extension = ''
+      if (parts.length > 0) {
+        extension = parts[parts.length - 1]
+      }
 
-    switch (state.fileExtension) {
-      case 'jpeg':
-      case 'jpg':
-      case 'png':
-      case 'webp':
-        return (
-          <CoreImageViewer
-            pathToFile={state.filePath}
-            fileExt={state.fileExtension}
-          />
-        )
-      case 'stl':
-      case 'obj':
-        return (
-          <Core3dObjectViewer
-            pathToFile={state.filePath}
-            fileExt={state.fileExtension}
-          />
-        )
-      default:
-        return (
-          <View>
-            <Text>Unknown format</Text>
-          </View>
-        )
+      switch (state.fileExtension) {
+        case 'jpeg':
+        case 'jpg':
+        case 'png':
+        case 'webp':
+          return (
+            <CoreImageViewer
+              pathToFile={state.filePath}
+              fileExt={state.fileExtension}
+            />
+          )
+        case 'stl':
+        case 'obj':
+          return (
+            <Core3dObjectViewer
+              pathToFile={state.filePath}
+              fileExt={state.fileExtension}
+            />
+          )
+        default:
+          return (
+            <View>
+              <Text>Unknown format</Text>
+            </View>
+          )
+      }
+    } else {
+      return (
+        <View
+          style={{
+            flex: 1,
+            padding: 0,
+            margin: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text>The file could not be obtained</Text>
+        </View>
+      )
     }
   }
 
   const renderLoadingView = () => {
-    return (
-      <LottieView
-        style={styles.animation}
-        source={require('../../assets/lottie/loading-animation')}
-        autoPlay
-        loop
-      />
-    )
+    if (props.lootieLoadingAnimation) {
+      return (
+        <LottieView
+          style={styles.animation}
+          source={props.lootieLoadingAnimation}
+          autoPlay
+          loop
+        />
+      )
+    } else {
+      return <ActivityIndicator size='large' />
+    }
   }
 
   return (

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, SafeAreaView, View } from 'react-native'
-import RNCoreFileViewerModule, { CoreFileViewer } from 'rn-core-file-viewer'
-import LottieView from 'lottie-react-native'
+import { CoreFileViewer } from 'rn-core-file-viewer'
 
 const App = () => {
   const [fileUrl, setFileUrl] = useState(
@@ -24,6 +23,7 @@ const App = () => {
       >
         <CoreFileViewer
           fileURL={fileUrl}
+          lootieLoadingAnimation={require('../assets/lottie/loading-animation')}
           fileExtension={fileExt}
           isVisible={isVisible}
           onDismissClicked={() => {

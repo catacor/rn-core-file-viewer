@@ -21,6 +21,7 @@ module.exports = {
       new RegExp(`${moduleRoot}/node_modules/react/.*`),
       new RegExp(`${moduleRoot}/node_modules/react-native/.*`),
     ]),
+    assetExts: ['obj', 'png', 'jpg', 'gif', 'stl'],
   },
   transformer: {
     getTransformOptions: async () => ({
@@ -29,11 +30,5 @@ module.exports = {
         inlineRequires: true,
       },
     }),
-  },
-}
-
-module.exports = {
-  resolver: {
-    assetExts: ['obj', 'png', 'jpg', 'gif', 'stl'],
   },
 }

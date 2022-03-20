@@ -1,7 +1,6 @@
 import {
-  GestureDetector,
-  Gesture,
   PinchGestureHandler,
+  GestureHandlerRootView,
 } from 'react-native-gesture-handler'
 import React, { useEffect, useReducer } from 'react'
 import {
@@ -204,41 +203,43 @@ export const CoreImageViewer = (props) => {
 
   return (
     <View style={styles.rootContainer}>
-      <PinchGestureHandler onGestureEvent={pinchHaldlerEvent}>
-        <Animated.View
-          style={[styles.container]}
-          onLayout={(event) => {
-            onContainerLayoutFinished(event)
-          }}
-        >
-          <Animated.Image
-            source={{
-              uri: props.pathToFile,
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <PinchGestureHandler onGestureEvent={pinchHaldlerEvent}>
+          <Animated.View
+            style={[styles.container]}
+            onLayout={(event) => {
+              onContainerLayoutFinished(event)
             }}
-            style={{
-              width: state.imageWidth,
-              height: state.imageHeight,
-              transform: [
-                {
-                  rotate: `${state.rotationRadian}deg`,
-                },
-                {
-                  scale: scale,
-                },
-              ],
-            }}
-          />
-          {true && (
-            <View
-              style={{
-                ...styles.overlay,
+          >
+            <Animated.Image
+              source={{
+                uri: props.pathToFile,
               }}
-            >
-              {generateGridLayout()}
-            </View>
-          )}
-        </Animated.View>
-      </PinchGestureHandler>
+              style={{
+                width: state.imageWidth,
+                height: state.imageHeight,
+                transform: [
+                  {
+                    rotate: `${state.rotationRadian}deg`,
+                  },
+                  {
+                    scale: scale,
+                  },
+                ],
+              }}
+            />
+            {true && (
+              <View
+                style={{
+                  ...styles.overlay,
+                }}
+              >
+                {generateGridLayout()}
+              </View>
+            )}
+          </Animated.View>
+        </PinchGestureHandler>
+      </GestureHandlerRootView>
       <View style={styles.controlsContainer}>
         {false && (
           <View style={styles.gridControls}>
@@ -258,7 +259,6 @@ export const CoreImageViewer = (props) => {
             decelerationRate={1}
             showsHorizontalScrollIndicator={false}
             alwaysBounceHorizontal={false}
-            snapToInterval={true}
             snapToAlignment='start'
           >
             <View style={styles.rotationScroll}>{generateRotationLines()}</View>

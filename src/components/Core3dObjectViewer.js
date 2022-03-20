@@ -10,23 +10,16 @@ import {
   Scene,
 } from 'three'
 import ExpoTHREE, { Renderer, THREE } from 'expo-three'
-import { ExpoWebGLRenderingContext, GLView } from 'expo-gl'
-import OrbitControlsView from 'expo-three-orbit-controls'
+import { GLView } from 'expo-gl'
 import {
   GestureDetector,
   Gesture,
   PinchGestureHandler,
-  State,
+  GestureHandlerRootView,
 } from 'react-native-gesture-handler'
-import {
-  useAnimatedGestureHandler,
-  useSharedValue,
-  Value,
-} from 'react-native-reanimated'
+import { useSharedValue } from 'react-native-reanimated'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
-//import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
-import { STLLoader } from './MSTLParser'
-import LottieView from 'lottie-react-native'
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
 import RNFetchBlob from 'rn-fetch-blob'
 import * as Base64 from 'base64-arraybuffer'
 
@@ -195,7 +188,7 @@ export const Core3dObjectViewer = (props) => {
     }
 
     const render = () => {
-      timeout = requestAnimationFrame(render)
+      let timeout = requestAnimationFrame(render)
 
       let newRadius = shphereRadius.value / scale.value
 
@@ -213,49 +206,33 @@ export const Core3dObjectViewer = (props) => {
     render()
   }
 
-  const [screenDimensions, setScreenDimensions] = useState({
-    width: 300,
-    height: 300,
-  })
-  const [dimenstionsDone, setDimenstionsDone] = useState(false)
-
-  const onContainerLayoutFinished = (event) => {
-    const { height, width } = event.nativeEvent.layout
-    setScreenDimensions({
-      width: width,
-      height: height,
-    })
-    setDimenstionsDone(true)
-  }
-
   return (
     <View
       style={{
         flex: 1,
       }}
-      onLayout={(event) => {
-        onContainerLayoutFinished(event)
-      }}
     >
-      <GestureDetector gesture={gesture}>
-        <PinchGestureHandler
-          onGestureEvent={pinchHandler}
-          onHandlerStateChange={onPinchHandlerChange}
-        >
-          <Animated.View
-            style={{
-              flex: 1,
-            }}
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureDetector gesture={gesture}>
+          <PinchGestureHandler
+            onGestureEvent={pinchHandler}
+            onHandlerStateChange={onPinchHandlerChange}
           >
-            <GLView
+            <Animated.View
               style={{
                 flex: 1,
               }}
-              onContextCreate={onContextCreate}
-            />
-          </Animated.View>
-        </PinchGestureHandler>
-      </GestureDetector>
+            >
+              <GLView
+                style={{
+                  flex: 1,
+                }}
+                onContextCreate={onContextCreate}
+              />
+            </Animated.View>
+          </PinchGestureHandler>
+        </GestureDetector>
+      </GestureHandlerRootView>
     </View>
   )
 }
