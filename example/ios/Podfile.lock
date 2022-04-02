@@ -342,7 +342,7 @@ PODS:
     - React-perflogger (= 0.64.3)
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNGestureHandler (2.3.0):
+  - RNGestureHandler (2.3.2):
     - React-Core
   - RNReanimated (2.4.1):
     - DoubleConversion
@@ -593,11 +593,11 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 493d9abb8b23c3f84e19ae221eeba92cadcb70dc
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNGestureHandler: 77d59828d40838c9fabb76a12d2d0a80c006906f
+  RNGestureHandler: 6e757e487a4834e7280e98e9bac66d2d9c575e9c
   RNReanimated: 58e7b950e0172235ff8296dd39ec145f9577e301
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: de7b5f9d41fab3b21d1b25ec728b029c52953518
+PODFILE CHECKSUM: 60ac7994c7ee1239fa9157e40844259af8b8e78d
 
 COCOAPODS: 1.11.2

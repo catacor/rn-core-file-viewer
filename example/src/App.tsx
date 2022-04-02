@@ -11,7 +11,7 @@ const App = () => {
   //"https://cdn.thingiverse.com/assets/d8/2e/4c/90/7a/Trophy_Collection_2022_-_Flowalistik_-_Lines.stl"
   //'https://external-preview.redd.it/GOkP8onbuyjGmN9Rc8Que5mw21CdSw6OuXpAKUuE6-4.jpg?auto=webp&s=2bc0e522d1f2fa887333286d557466b2be00fa5e'
   const [isVisible, setIsVisible] = useState(false)
-
+  const [fileBinary, setFileBinary] = useState<object>()
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#00000011' }}>
       <View
@@ -24,7 +24,8 @@ const App = () => {
         <CoreFileViewer
           fileURL={fileUrl}
           lootieLoadingAnimation={require('../assets/lottie/loading-animation')}
-          fileExtension={fileExt}
+          //fileExtension={fileExt}
+          fileBinary={fileBinary}
           isVisible={isVisible}
           onDismissClicked={() => {
             setIsVisible(false)
@@ -61,6 +62,13 @@ const App = () => {
             setFileUrl(
               'https://cdn.thingiverse.com/assets/d8/2e/4c/90/7a/Trophy_Collection_2022_-_Flowalistik_-_Lines.stl'
             )
+          }}
+        />
+        <Button
+          title={'stl'}
+          onPress={() => {
+            let binar = [102, 111, 111]
+            setFileBinary(binar)
           }}
         />
       </View>

@@ -16,13 +16,13 @@ import {
 } from 'react-native'
 import LottieView from 'lottie-react-native'
 import RNFetchBlob from 'rn-fetch-blob'
-
 //local imports
 import { CoreImageViewer } from './CoreImageViewer'
 import { Core3dObjectViewer } from './Core3dObjectViewer'
 
 const TOGGLE_VISIBILITY = 'TOGGLE_VISIBILITY'
 const FILE_URL_SOURCE_CHANGE = 'FILE_URL_SOURCE_CHANGE'
+const FILE_LOCAL_SOURCE_CHANGE = 'FILE_LOCAL_SOURCE_CHANGE'
 const DOWNLOAD_PROGGRESS_CHANGED = 'DOWNLOAD_PROGGRESS_CHANGED'
 const DOWNLOAD_FINISHED = 'DOWNLOAD_FINISHED'
 const DOWNLOAD_ERROR = 'DOWNLOAD_ERROR'
@@ -34,6 +34,7 @@ const FILE_EXT_CHANGE = 'FILE_EXT_CHANGE'
 const initialState = {
   isVisible: false,
   fileURL: '',
+  fileLocalUri: '',
   fileExtension: '',
   isFileReady: false,
   filePath: null,
@@ -49,6 +50,9 @@ const reducer = (state, action) => {
     }
     case FILE_URL_SOURCE_CHANGE: {
       return { ...state, fileURL: action.payload.url }
+    }
+    case FILE_LOCAL_SOURCE_CHANGE: {
+      return { ...state, fileLocalUri: action.payload.fileLocalUri }
     }
     case FILE_EXT_CHANGE: {
       return { ...state, fileExtension: action.payload.ext }
@@ -104,6 +108,12 @@ const changeFileURLSource = (fileURL) => ({
   type: FILE_URL_SOURCE_CHANGE,
   payload: {
     url: fileURL != null ? fileURL : '',
+  },
+})
+const changeFileLocalSource = (fileLocalUri) => ({
+  type: FILE_LOCAL_SOURCE_CHANGE,
+  payload: {
+    fileLocalUri: fileLocalUri != null ? fileLocalUri : '',
   },
 })
 const changeFileExtension = (ext) => ({
@@ -200,6 +210,28 @@ export const CoreFileViewer = (props) => {
       dispatch(changeFileReadyStatus(false))
     }
   }, [props.fileURL])
+
+  useEffect(() => {
+    //setting props
+    if (props.fileLocalUri != null) {
+      if (Platform.OS === 'ios' || permissionChecker()) {
+        if (props.fileLocalUri != state.fileLocalUri) {
+          dispatch(changeFileLocalSource(props.fileLocalUri))
+          dispatch(fileDownloadReady(props.fileLocalUri))
+          dispatch(changeFileReadyStatus(true))
+        }
+      } else {
+        dispatch(changeFileLocalSource(null))
+        dispatch(changeFileReadyStatus(false))
+        console.log('Permissions not granted')
+        return
+      }
+    } else {
+      //revert to default
+      dispatch(changeFileLocalSource(null))
+      dispatch(changeFileReadyStatus(false))
+    }
+  }, [props.fileLocalUri])
 
   useEffect(() => {
     if (props.fileExtension != state.fileExtension) {

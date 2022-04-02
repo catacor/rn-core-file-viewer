@@ -1,6 +1,6 @@
 {
   "name": "rn-core-file-viewer",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "File Viewer (images and 3D objects)",
   "homepage": "https://github.com/catacor/rn-core-file-viewer#readme",
   "main": "lib/index.js",
@@ -66,16 +66,16 @@
     ]
   },
   "dependencies": {
+    "base64-arraybuffer": "*",
     "expo": "*",
     "expo-gl": "*",
     "expo-gl-cpp": "*",
     "expo-three": "*",
-    "three": "*",
     "lottie-ios": "*",
     "lottie-react-native": "*",
     "react-native-gesture-handler": "*",
     "react-native-reanimated": "*",
     "rn-fetch-blob": "*",
-    "base64-arraybuffer": "*"
+    "three": "*"
   }
 }
