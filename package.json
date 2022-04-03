@@ -1,6 +1,6 @@
 {
   "name": "rn-core-file-viewer",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "description": "File Viewer (images and 3D objects)",
   "homepage": "https://github.com/catacor/rn-core-file-viewer#readme",
   "main": "lib/index.js",

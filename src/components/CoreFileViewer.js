@@ -21,6 +21,7 @@ import { CoreImageViewer } from './CoreImageViewer'
 import { Core3dObjectViewer } from './Core3dObjectViewer'
 
 const TOGGLE_VISIBILITY = 'TOGGLE_VISIBILITY'
+const RESET_PROGRESS = 'RESET_PROGRESS'
 const FILE_URL_SOURCE_CHANGE = 'FILE_URL_SOURCE_CHANGE'
 const FILE_LOCAL_SOURCE_CHANGE = 'FILE_LOCAL_SOURCE_CHANGE'
 const DOWNLOAD_PROGGRESS_CHANGED = 'DOWNLOAD_PROGGRESS_CHANGED'
@@ -46,7 +47,10 @@ const initialState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case TOGGLE_VISIBILITY: {
-      return { ...state, isVisible: !state.isVisible, downloadProgres: 0.0 }
+      return { ...state, isVisible: !state.isVisible }
+    }
+    case RESET_PROGRESS: {
+      return { ...state, downloadProgres: 0.0 }
     }
     case FILE_URL_SOURCE_CHANGE: {
       return { ...state, fileURL: action.payload.url }
@@ -104,6 +108,9 @@ const reducer = (state, action) => {
 
 //reducer functions call
 const toggleModalVisibility = () => ({ type: TOGGLE_VISIBILITY })
+const resetProgress = () => ({
+  type: RESET_PROGRESS,
+})
 const changeFileURLSource = (fileURL) => ({
   type: FILE_URL_SOURCE_CHANGE,
   payload: {
@@ -216,9 +223,8 @@ export const CoreFileViewer = (props) => {
     if (props.fileLocalUri != null) {
       if (Platform.OS === 'ios' || permissionChecker()) {
         if (props.fileLocalUri != state.fileLocalUri) {
+          console.log('change local uri source')
           dispatch(changeFileLocalSource(props.fileLocalUri))
-          dispatch(fileDownloadReady(props.fileLocalUri))
-          dispatch(changeFileReadyStatus(true))
         }
       } else {
         dispatch(changeFileLocalSource(null))
@@ -244,14 +250,28 @@ export const CoreFileViewer = (props) => {
   useEffect(() => {
     if (props.isVisible != null) {
       if (props.isVisible != state.isVisible) dispatch(toggleModalVisibility())
-
       if (props.isVisible) {
+        console.log('2')
+        if (state.fileLocalUri) {
+          console.log('display local file')
+          dispatch(fileDownloadReady(state.fileLocalUri))
+        }
         //means we have to show the file
-        if (state.cachingActive) {
-          //check if the file is already cached
-          if (state.isFileCached) {
-            //we can already display the file
-            dispatch(changeFileReadyStatus(true))
+        else {
+          if (state.cachingActive) {
+            //check if the file is already cached
+            if (state.isFileCached) {
+              //we can already display the file
+              dispatch(changeFileReadyStatus(true))
+            } else {
+              //check if the url is valid and start the download process
+              dispatch(resetProgress())
+              if (state.fileURL) {
+                startDownloadProcess()
+              } else {
+                console.log('No file provided')
+              }
+            }
           } else {
             //check if the url is valid and start the download process
             if (state.fileURL) {
@@ -259,13 +279,6 @@ export const CoreFileViewer = (props) => {
             } else {
               console.log('No file provided')
             }
-          }
-        } else {
-          //check if the url is valid and start the download process
-          if (state.fileURL) {
-            startDownloadProcess()
-          } else {
-            console.log('No file provided')
           }
         }
       }

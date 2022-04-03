@@ -15,6 +15,7 @@ import {
 } from 'react-native'
 //local imports
 import { initialState, reducer, functions } from '../reducers/CoreImageReducer'
+import { useSharedValue } from 'react-native-reanimated'
 
 const cmmdc = (a, b) => {
   while (a != b) {
@@ -169,15 +170,29 @@ export const CoreImageViewer = (props) => {
   }
 
   const scale = React.useRef(new Animated.Value(1)).current
-
+  const oldScale = useSharedValue(1)
+  /*
   const pinchHaldlerEvent = Animated.event(
     [
       {
-        nativeEvent: { scale },
+        nativeEvent: { scale: scale },
       },
     ],
     { useNativeDriver: true }
-  )
+  )*/
+
+  const pinchHaldlerEvent = (event) => {
+    scale.setValue(oldScale.value * event.nativeEvent.scale)
+  }
+
+  const onPinchHandlerChange = (event) => {
+    if (event.nativeEvent.oldState === 0) {
+      //new zoom event
+    } else {
+      ///zoom event ended
+      oldScale.value = oldScale.value * event.nativeEvent.scale
+    }
+  }
 
   useEffect(() => {
     if (props.pathToFile) {
@@ -204,7 +219,10 @@ export const CoreImageViewer = (props) => {
   return (
     <View style={styles.rootContainer}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <PinchGestureHandler onGestureEvent={pinchHaldlerEvent}>
+        <PinchGestureHandler
+          onGestureEvent={pinchHaldlerEvent}
+          onHandlerStateChange={onPinchHandlerChange}
+        >
           <Animated.View
             style={[styles.container]}
             onLayout={(event) => {

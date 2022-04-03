@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, SafeAreaView, View } from 'react-native'
 import { CoreFileViewer } from 'rn-core-file-viewer'
+import RNFetchBlob from 'rn-fetch-blob'
 
 const App = () => {
   const [fileUrl, setFileUrl] = useState(
@@ -11,7 +12,7 @@ const App = () => {
   //"https://cdn.thingiverse.com/assets/d8/2e/4c/90/7a/Trophy_Collection_2022_-_Flowalistik_-_Lines.stl"
   //'https://external-preview.redd.it/GOkP8onbuyjGmN9Rc8Que5mw21CdSw6OuXpAKUuE6-4.jpg?auto=webp&s=2bc0e522d1f2fa887333286d557466b2be00fa5e'
   const [isVisible, setIsVisible] = useState(false)
-  const [fileBinary, setFileBinary] = useState<object>()
+  const [localUri, setLocalUri] = useState('')
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#00000011' }}>
       <View
@@ -22,11 +23,10 @@ const App = () => {
         }}
       >
         <CoreFileViewer
-          fileURL={fileUrl}
           lootieLoadingAnimation={require('../assets/lottie/loading-animation')}
-          //fileExtension={fileExt}
-          fileBinary={fileBinary}
+          fileExtension={fileExt}
           isVisible={isVisible}
+          fileLocalUri={localUri}
           onDismissClicked={() => {
             setIsVisible(false)
           }}
@@ -65,10 +65,39 @@ const App = () => {
           }}
         />
         <Button
-          title={'stl'}
+          title={'test local uri'}
           onPress={() => {
-            let binar = [102, 111, 111]
-            setFileBinary(binar)
+            setFileExt('png')
+            RNFetchBlob.config({
+              fileCache: true,
+              appendExt: 'jpg',
+            })
+              .fetch(
+                'GET',
+                'https://upload.wikimedia.org/wikipedia/commons/e/e9/Felis_silvestris_silvestris_small_gradual_decrease_of_quality.png',
+                {}
+              )
+              .then((res) => {
+                let status = res.info().status
+
+                if (status == 200) {
+                  console.log('File saved to ', res.path())
+                  setLocalUri(
+                    Platform.OS === 'android'
+                      ? 'file://' + res.path()
+                      : '' + res.path()
+                  )
+                } else {
+                  console.log('Error! File path is worng')
+                  console.log(res.info())
+                }
+              })
+              // Something went wrong:
+              .catch((errorMessage, statusCode) => {
+                // error handling
+                console.log(errorMessage)
+                console.log(statusCode)
+              })
           }}
         />
       </View>
