@@ -16,6 +16,7 @@ import {
 } from 'react-native'
 import LottieView from 'lottie-react-native'
 import RNFetchBlob from 'rn-fetch-blob'
+import { Pdf, PdfUtil } from 'react-native-pdf-light'
 //local imports
 import { CoreImageViewer } from './CoreImageViewer'
 import { Core3dObjectViewer } from './Core3dObjectViewer'
@@ -31,9 +32,14 @@ const CHANGE_CACHING_CONF = 'CHANGE_CACHING_CONF'
 const FILE_CACHE_STATE = 'FILE_CACHE_STATE'
 const FILE_REDY_STATUS = 'FILE_REDY_STATUS'
 const FILE_EXT_CHANGE = 'FILE_EXT_CHANGE'
+const CHANGE_ACTIVE_FILE_SOURCE = 'CHANGE_ACTIVE_FILE_SOURCE'
+
+export const LOCAL_URI = 'LOCAL_URI'
+export const EXTERNAL_URL = 'EXTERNAL_URL'
 
 const initialState = {
   isVisible: false,
+  activeFileSource: LOCAL_URI,
   fileURL: '',
   fileLocalUri: '',
   fileExtension: '',
@@ -103,6 +109,12 @@ const reducer = (state, action) => {
         isFileReady: action.payload,
       }
     }
+    case CHANGE_ACTIVE_FILE_SOURCE: {
+      return {
+        ...state,
+        activeFileSource: action.payload,
+      }
+    }
   }
 }
 
@@ -148,6 +160,11 @@ const changeFileReadyStatus = (status) => ({
   type: FILE_REDY_STATUS,
   payload: status,
 })
+const changeActiveFileSource = (source) => ({
+  type: CHANGE_ACTIVE_FILE_SOURCE,
+  payload: source,
+})
+
 //permissions checking
 const checkPermissionStatus = async (permission) => {
   return await PermissionsAndroid.request(permission, {
@@ -193,7 +210,9 @@ export const CoreFileViewer = (props) => {
 
   useEffect(() => {
     //setting props
+    //dispatch(changeActiveFileSource(EXTERNAL_URL))
     if (props.fileURL != null) {
+      console.log('File path changed')
       if (Platform.OS === 'ios' || permissionChecker()) {
         if (props.fileURL != state.fileURL) {
           dispatch(changeFileURLSource(props.fileURL))
@@ -212,6 +231,8 @@ export const CoreFileViewer = (props) => {
       }
     } else {
       //revert to default
+
+      console.log('File path null')
       dispatch(changeFileURLSource(null))
       dispatch(cachedFileCachedStatus(false))
       dispatch(changeFileReadyStatus(false))
@@ -220,6 +241,7 @@ export const CoreFileViewer = (props) => {
 
   useEffect(() => {
     //setting props
+    changeActiveFileSource(LOCAL_URI)
     if (props.fileLocalUri != null) {
       if (Platform.OS === 'ios' || permissionChecker()) {
         if (props.fileLocalUri != state.fileLocalUri) {
@@ -240,6 +262,22 @@ export const CoreFileViewer = (props) => {
   }, [props.fileLocalUri])
 
   useEffect(() => {
+    console.log('FILE SOURCE C?HANGE')
+    if (props.activeSource) {
+      switch (props.activeSource) {
+        case EXTERNAL_URL: {
+          dispatch(changeActiveFileSource(EXTERNAL_URL))
+          break
+        }
+        case LOCAL_URI: {
+          dispatch(changeActiveFileSource(LOCAL_URI))
+          break
+        }
+      }
+    }
+  }, [props.activeSource])
+
+  useEffect(() => {
     if (props.fileExtension != state.fileExtension) {
       dispatch(changeFileExtension(props.fileExtension))
       dispatch(cachedFileCachedStatus(false))
@@ -251,34 +289,38 @@ export const CoreFileViewer = (props) => {
     if (props.isVisible != null) {
       if (props.isVisible != state.isVisible) dispatch(toggleModalVisibility())
       if (props.isVisible) {
-        console.log('2')
-        if (state.fileLocalUri) {
-          console.log('display local file')
-          dispatch(fileDownloadReady(state.fileLocalUri))
-        }
-        //means we have to show the file
-        else {
-          if (state.cachingActive) {
-            //check if the file is already cached
-            if (state.isFileCached) {
-              //we can already display the file
-              dispatch(changeFileReadyStatus(true))
+        switch (state.activeFileSource) {
+          case EXTERNAL_URL: {
+            if (state.cachingActive) {
+              //check if the file is already cached
+              if (state.isFileCached) {
+                //we can already display the file
+                dispatch(changeFileReadyStatus(true))
+              } else {
+                //check if the url is valid and start the download process
+                dispatch(resetProgress())
+                if (state.fileURL) {
+                  startDownloadProcess()
+                } else {
+                  console.log('No file provided')
+                }
+              }
             } else {
               //check if the url is valid and start the download process
-              dispatch(resetProgress())
               if (state.fileURL) {
                 startDownloadProcess()
               } else {
                 console.log('No file provided')
               }
             }
-          } else {
-            //check if the url is valid and start the download process
-            if (state.fileURL) {
-              startDownloadProcess()
-            } else {
-              console.log('No file provided')
+            break
+          }
+          case LOCAL_URI: {
+            if (state.fileLocalUri) {
+              console.log('display local file')
+              dispatch(fileDownloadReady(state.fileLocalUri))
             }
+            break
           }
         }
       }
@@ -326,7 +368,7 @@ export const CoreFileViewer = (props) => {
       if (parts.length > 0) {
         extension = parts[parts.length - 1]
       }
-
+      PdfUtil.getPageCount(state.filePath).then(console.log)
       switch (state.fileExtension) {
         case 'jpeg':
         case 'jpg':
@@ -346,6 +388,8 @@ export const CoreFileViewer = (props) => {
               fileExt={state.fileExtension}
             />
           )
+        case 'pdf':
+          return <Pdf source={state.filePath} />
         default:
           return (
             <View>
@@ -483,5 +527,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  pdf: {
+    flex: 1,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
 })

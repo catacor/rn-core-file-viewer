@@ -1,6 +1,10 @@
 import { NativeModules } from 'react-native'
-import { CoreFileViewer } from './components/CoreFileViewer'
+import {
+  CoreFileViewer,
+  EXTERNAL_URL,
+  LOCAL_URI,
+} from './components/CoreFileViewer'
 
-export { CoreFileViewer }
+export { CoreFileViewer, EXTERNAL_URL, LOCAL_URI }
 
 export default NativeModules.RNCoreFileViewerModule
