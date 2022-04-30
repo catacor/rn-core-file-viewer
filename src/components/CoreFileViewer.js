@@ -20,6 +20,7 @@ import { Pdf, PdfUtil } from 'react-native-pdf-light'
 //local imports
 import { CoreImageViewer } from './CoreImageViewer'
 import { Core3dObjectViewer } from './Core3dObjectViewer'
+import { CorePdfViewer } from './CorePdfViewer'
 
 const TOGGLE_VISIBILITY = 'TOGGLE_VISIBILITY'
 const RESET_PROGRESS = 'RESET_PROGRESS'
@@ -389,7 +390,7 @@ export const CoreFileViewer = (props) => {
             />
           )
         case 'pdf':
-          return <Pdf source={state.filePath} />
+          return <CorePdfViewer pathToFile={state.filePath} />
         default:
           return (
             <View>
@@ -486,7 +487,7 @@ const styles = StyleSheet.create({
   modalView: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
     borderRadius: 10,
     elevation: 5,
     justifyContent: 'center',
