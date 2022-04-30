@@ -344,9 +344,9 @@ PODS:
     - React-perflogger (= 0.64.3)
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNGestureHandler (2.3.2):
+  - RNGestureHandler (2.4.1):
     - React-Core
-  - RNReanimated (2.4.1):
+  - RNReanimated (2.8.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -354,7 +354,6 @@ PODS:
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
-    - React
     - React-callinvoker
     - React-Core
     - React-Core/DevSupport
@@ -599,8 +598,8 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 493d9abb8b23c3f84e19ae221eeba92cadcb70dc
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNGestureHandler: 6e757e487a4834e7280e98e9bac66d2d9c575e9c
-  RNReanimated: 58e7b950e0172235ff8296dd39ec145f9577e301
+  RNGestureHandler: 4f4986408310a43f1606c391f38f76e0d6e790d5
+  RNReanimated: 7f3eef39b48facdb0b053873abdaafaa6a953b0d
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
