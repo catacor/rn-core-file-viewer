@@ -121,8 +121,7 @@ lootieLoadingAnimation={require('../assets/lottie/loading-animation')}
 
 ```
 
-<img src="./docs/show-image.png" width="128"/>
-<img src="./docs/show-pdf.png" width="128"/>
+<img src="./docs/show-image.png" width="256"/> <img src="./docs/show-pdf.png" width="256"/>
 
 ## Caching mechanism
 
