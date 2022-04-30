@@ -117,8 +117,6 @@ export const CorePdfViewer = (props) => {
     if (oldScale.value * event.nativeEvent.scale < 1) {
       scale.setValue(1)
     } else scale.setValue(oldScale.value * event.nativeEvent.scale)
-
-    console.log(`${Math.floor((scale._value - 1) * height)}`)
   }
 
   const onPinchHandlerChange = (event) => {

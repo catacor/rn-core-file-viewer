@@ -213,7 +213,6 @@ export const CoreFileViewer = (props) => {
     //setting props
     //dispatch(changeActiveFileSource(EXTERNAL_URL))
     if (props.fileURL != null) {
-      console.log('File path changed')
       if (Platform.OS === 'ios' || permissionChecker()) {
         if (props.fileURL != state.fileURL) {
           dispatch(changeFileURLSource(props.fileURL))
@@ -246,7 +245,6 @@ export const CoreFileViewer = (props) => {
     if (props.fileLocalUri != null) {
       if (Platform.OS === 'ios' || permissionChecker()) {
         if (props.fileLocalUri != state.fileLocalUri) {
-          console.log('change local uri source')
           dispatch(changeFileLocalSource(props.fileLocalUri))
         }
       } else {
@@ -263,7 +261,6 @@ export const CoreFileViewer = (props) => {
   }, [props.fileLocalUri])
 
   useEffect(() => {
-    console.log('FILE SOURCE C?HANGE')
     if (props.activeSource) {
       switch (props.activeSource) {
         case EXTERNAL_URL: {
@@ -318,7 +315,6 @@ export const CoreFileViewer = (props) => {
           }
           case LOCAL_URI: {
             if (state.fileLocalUri) {
-              console.log('display local file')
               dispatch(fileDownloadReady(state.fileLocalUri))
             }
             break
@@ -339,7 +335,6 @@ export const CoreFileViewer = (props) => {
         let status = res.info().status
 
         if (status == 200) {
-          console.log('File saved to ', res.path())
           dispatch(
             fileDownloadReady(
               Platform.OS === 'android'
@@ -348,7 +343,6 @@ export const CoreFileViewer = (props) => {
             )
           )
         } else {
-          console.log('Error! File path is worng')
           console.log(res.info())
           dispatch(fileDownloadError())
         }
@@ -369,7 +363,7 @@ export const CoreFileViewer = (props) => {
       if (parts.length > 0) {
         extension = parts[parts.length - 1]
       }
-      PdfUtil.getPageCount(state.filePath).then(console.log)
+
       switch (state.fileExtension) {
         case 'jpeg':
         case 'jpg':

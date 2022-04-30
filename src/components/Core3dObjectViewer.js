@@ -24,11 +24,6 @@ import RNFetchBlob from 'rn-fetch-blob'
 import * as Base64 from 'base64-arraybuffer'
 
 export const Core3dObjectViewer = (props) => {
-  useEffect(() => {
-    console.log(props.fileExt)
-    console.log(props.pathToFile)
-  }, [])
-
   const scale = useSharedValue(1)
   const oldScale = useSharedValue(1)
   const pinchHandler = (event) => {

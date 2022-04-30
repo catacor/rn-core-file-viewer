@@ -27,10 +27,10 @@ const App = () => {
         <CoreFileViewer
           lootieLoadingAnimation={require('../assets/lottie/loading-animation')}
           activeSource={activeSource}
-          fileExtension={fileExt}
           fileURL={fileUrl}
-          isVisible={isVisible}
           fileLocalUri={localUri}
+          fileExtension={fileExt}
+          isVisible={isVisible}
           onDismissClicked={() => {
             setIsVisible(false)
           }}
@@ -57,7 +57,7 @@ const App = () => {
             setActiveSource(EXTERNAL_URL)
             setFileExt('stl')
             setFileUrl(
-              'https://cdn.thingiverse.com/assets/7e/49/a4/24/e2/Drywall_Anchor.stl'
+              'https://ozeki.hu/attachments/116/Menger_sponge_sample.stl'
             )
           }}
         />
@@ -67,7 +67,7 @@ const App = () => {
             setActiveSource(EXTERNAL_URL)
             setFileExt('stl')
             setFileUrl(
-              'https://cdn.thingiverse.com/assets/d8/2e/4c/90/7a/Trophy_Collection_2022_-_Flowalistik_-_Lines.stl'
+              'https://ozeki.hu/attachments/116/Menger_sponge_sample.stl'
             )
           }}
         />
