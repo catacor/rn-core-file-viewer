@@ -19,7 +19,9 @@ import {
 //local imports
 import { initialState, reducer, functions } from '../reducers/CoreImageReducer'
 import { useSharedValue } from 'react-native-reanimated'
-import { Pdf } from 'react-native-pdf-light'
+//import { Pdf } from 'react-native-pdf-light'
+
+import { Pdf } from './pdf/Pdf'
 
 export const CorePdfViewer = (props) => {
   const scale = React.useRef(new Animated.Value(1)).current
@@ -48,25 +50,6 @@ export const CorePdfViewer = (props) => {
     } else {
       translateX.setValue(oldTranslateX.value + event.nativeEvent.translationX)
     }
-
-    if (
-      Math.abs(oldTranslateY.value + event.nativeEvent.translationY) >
-      Math.floor((Math.max(0, scale._value) - 1) * height) / (2 * scale._value)
-    ) {
-      if (oldTranslateY.value + event.nativeEvent.translationY < 0) {
-        translateY.setValue(
-          -Math.floor((Math.max(0, scale._value) - 1) * height) /
-            (2 * scale._value)
-        )
-      } else {
-        translateY.setValue(
-          Math.floor((Math.max(0, scale._value) - 1) * height) /
-            (2 * scale._value)
-        )
-      }
-    } else {
-      translateY.setValue(oldTranslateY.value + event.nativeEvent.translationY)
-    }
   }
 
   const onPanGesstureHandlerChange = (event) => {
@@ -91,25 +74,6 @@ export const CorePdfViewer = (props) => {
         oldTranslateX.value =
           oldTranslateX.value + event.nativeEvent.translationX
       }
-
-      if (
-        Math.abs(oldTranslateY.value + event.nativeEvent.translationY) >
-        Math.floor((Math.max(0, scale._value) - 1) * height) /
-          (2 * scale._value)
-      ) {
-        if (oldTranslateY.value + event.nativeEvent.translationY < 0) {
-          oldTranslateY.value =
-            -Math.floor((Math.max(0, scale._value) - 1) * height) /
-            (2 * scale._value)
-        } else {
-          oldTranslateY.value =
-            Math.floor((Math.max(0, scale._value) - 1) * height) /
-            (2 * scale._value)
-        }
-      } else {
-        oldTranslateY.value =
-          oldTranslateY.value + event.nativeEvent.translationY
-      }
     }
   }
 
@@ -117,6 +81,17 @@ export const CorePdfViewer = (props) => {
     if (oldScale.value * event.nativeEvent.scale < 1) {
       scale.setValue(1)
     } else scale.setValue(oldScale.value * event.nativeEvent.scale)
+
+    console.log('zoom: ' + scale._value)
+    console.log('height: ' + height)
+    console.log(
+      'padding: ' +
+        Math.floor((Math.max(1, scale._value) - 1) * height) /
+          (2 * scale._value)
+    )
+    setVerticalPadding(
+      Math.floor((Math.max(1, scale._value) - 1) * height) / (2 * scale._value)
+    )
   }
 
   const onPinchHandlerChange = (event) => {
@@ -130,6 +105,7 @@ export const CorePdfViewer = (props) => {
     }
   }
 
+  const [verticalPadding, setVerticalPadding] = useState(0)
   const [widht, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
 
@@ -170,13 +146,14 @@ export const CorePdfViewer = (props) => {
                   {
                     translateX: translateX,
                   },
-                  {
-                    translateY: translateY,
-                  },
                 ],
               }}
             >
-              <Pdf source={props.pathToFile} resizeMode={'contain'} />
+              <Pdf
+                source={props.pathToFile}
+                resizeMode={'contain'}
+                verticalPadding={verticalPadding}
+              />
             </Animated.View>
           </PinchGestureHandler>
         </Animated.View>

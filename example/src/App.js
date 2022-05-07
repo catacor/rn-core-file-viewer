@@ -77,7 +77,7 @@ const App = () => {
             setActiveSource(EXTERNAL_URL)
             setFileExt('pdf')
             setFileUrl(
-              'https://file-examples.com/storage/fef12739526267ac9a2b543/2017/10/file-example_PDF_1MB.pdf'
+              'https://file-examples.com/storage/fe261102296275a0792fe08/2017/10/file-example_PDF_1MB.pdf'
             )
           }}
         />
