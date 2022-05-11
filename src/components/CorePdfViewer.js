@@ -19,9 +19,7 @@ import {
 //local imports
 import { initialState, reducer, functions } from '../reducers/CoreImageReducer'
 import { useSharedValue } from 'react-native-reanimated'
-//import { Pdf } from 'react-native-pdf-light'
-
-import { Pdf } from './pdf/Pdf'
+import { Pdf } from './CorePdf'
 
 export const CorePdfViewer = (props) => {
   const scale = React.useRef(new Animated.Value(1)).current
@@ -82,16 +80,13 @@ export const CorePdfViewer = (props) => {
       scale.setValue(1)
     } else scale.setValue(oldScale.value * event.nativeEvent.scale)
 
-    console.log('zoom: ' + scale._value)
-    console.log('height: ' + height)
-    console.log(
-      'padding: ' +
+    if (oldScale.value * event.nativeEvent.scale < 1) {
+      setVerticalPadding(Math.floor(0))
+    } else
+      setVerticalPadding(
         Math.floor((Math.max(1, scale._value) - 1) * height) /
           (2 * scale._value)
-    )
-    setVerticalPadding(
-      Math.floor((Math.max(1, scale._value) - 1) * height) / (2 * scale._value)
-    )
+      )
   }
 
   const onPinchHandlerChange = (event) => {

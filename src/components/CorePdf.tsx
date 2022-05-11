@@ -18,8 +18,8 @@ import {
   View,
 } from 'react-native'
 
-import { PageDim, PdfUtil } from './PdfUtil'
-import { PdfView } from './PdfView'
+import { PageDim, PdfUtil } from 'react-native-pdf-light'
+import { PdfView } from 'react-native-pdf-light'
 
 export type PageMeasurement = {
   /**
@@ -145,7 +145,7 @@ type PdfProps = BaseListProps & {
   testID?: string
 
   /**
-   * Used to keep top and bottom padding when zooming.
+   * Used to locate this view in end-to-end tests.
    */
   verticalPadding?: number
 }
@@ -206,6 +206,12 @@ export const Pdf = forwardRef((props: PdfProps, ref: React.Ref<PdfRef>) => {
   const [pageDims, setPageDims] = useState<PageDim[]>([])
 
   const listRef = useRef<FlatList<PageDim>>(null)
+
+  const [verticalPadding, setVerticalPadding] = useState(0)
+
+  useEffect(() => {
+    if (props.verticalPadding) setVerticalPadding(props.verticalPadding)
+  }, [props.verticalPadding])
 
   useImperativeHandle(
     ref,
@@ -330,20 +336,12 @@ export const Pdf = forwardRef((props: PdfProps, ref: React.Ref<PdfRef>) => {
     [maxPageHeight, props.annotation, source]
   )
 
-  const [verticalPadding, setVerticalPadding] = useState(0)
-
-  useEffect(() => {
-    setVerticalPadding(props.verticalPadding)
-    console.log('CHANGE VPAD')
-  }, [props.verticalPadding])
-
   return (
     <FlatList
       data={
         flatListLayout.height !== 0 || pageDims.length === 0 ? pageDims : []
       }
-      ListHeaderComponent={<View style={{ height: verticalPadding }} />}
-      ListFooterComponent={<View style={{ height: verticalPadding }} />}
+      style={{ paddingVertical: verticalPadding }}
       getItemLayout={getItemLayout}
       initialNumToRender={1}
       ItemSeparatorComponent={generateItemSeparator}
